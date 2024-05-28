@@ -1,15 +1,21 @@
 require('dotenv').config();
 const express = require('express');
+const bodyParse = require('body-parser')
 const cors = require('cors');
 const app = express();
-const {connectDB, model} = require("./config/db")
+const {connectDB, model} = require("./config/db");
+const bodyParser = require('body-parser');
 
 connectDB();
+
+let counter = 1;
 
 // Basic Configuration
 const port = process.env.PORT || 3000;
 
 app.use(cors());
+
+app.use(bodyParser.json())
 
 app.use('/public', express.static(`${process.cwd()}/public`));
 
@@ -23,16 +29,33 @@ app.get('/api/hello', function(req, res) {
 });
 
 app.post('/api/shorturl', function(req,res) {
-  const originalURL = req.body.url;
+  console.log(req.body.url)
+  const originalURL = ""
+  res.json(addUrl(originalURL));
 })
 
 app.get('/api/shorturl/:shorturl', function(req,res) {
-  const shorturl = req.body.url;
+  const shortUrl = req.params.shorturl;
+  const getUrl = model.collection.findOne({id: shortUrl});
+  res.json({url: getUrl})
 })
 
-const addURL = (newURL) => {
-  const urls = model.collection('url_shortener');
-  const urlMapping = await.collection.findOne({shortU})
+const addUrl = (newUrl) => {
+  const urls = model.collection;
+  console.log(newUrl)
+  const urlExists = urls.findOne({url: newUrl})
+  if (urlExists) return urlExists;
+  else {
+    urls.insertOne({id: counter, url: newUrl})
+    counter++;
+    return newUrl;
+  }
+}
+
+addUrl();
+
+const idGenerator = () => {
+  counter++;
 }
 
 app.listen(port, function() {
