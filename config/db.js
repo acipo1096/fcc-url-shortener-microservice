@@ -1,4 +1,10 @@
 const mongoose = require("mongoose");
+const Schema = mongoose.Schema
+
+const Urls = new Schema({
+    id: Number,
+    url: String
+})
 
 const connectDB = async () => {
     try {
@@ -10,4 +16,6 @@ const connectDB = async () => {
     }
 }
 
-module.exports = connectDB;
+const model = mongoose.model("url_shortener", Urls, "url_shortener");
+
+module.exports = { connectDB , model}
