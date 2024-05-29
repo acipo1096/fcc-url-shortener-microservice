@@ -8,7 +8,7 @@ const bodyParser = require('body-parser');
 
 connectDB();
 
-let counter = 1;
+let counter = 0;
 
 // Basic Configuration
 const port = process.env.PORT || 3000;
@@ -32,7 +32,6 @@ app.get('/api/hello', function(req, res) {
 app.post('/api/shorturl', async function(req,res) {
   const originalURL = req.body.url
   const result = await addUrl(originalURL);
-  console.log("result" + result)
   res.json(result)
 });
 
@@ -50,15 +49,21 @@ async function addUrl(newUrl) {
     return {"original_url" : urlExists['original_url'], "short_url" : urlExists['short_url']};
   }
   else {
+    if (counter = 0) counter++;
+    else {
+      await urls.findOne({short_url: counter})
+
+    }
     let returnedUrl = await urls.insertOne({original_url: newUrl, short_url: counter})
+    counter = 0 ? counter++ : {
+    }
     idGenerator();
     console.log("counter should be " + counter)
     console.log(returnedUrl)
+    console.log({"original_url" : returnedUrl.insertedId["original_url"]})
     return {"original_url" : returnedUrl.insertedId["original_url"]}
   }
 }
-
-addUrl();
 
 app.get('/api/shorturl/:shorturl', function(req,res) {
   const shortUrl = req.params.shorturl;
