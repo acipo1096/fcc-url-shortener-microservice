@@ -50,11 +50,11 @@ async function addUrl(newUrl) {
     return {"original_url" : urlExists['original_url'], "short_url" : urlExists['short_url']};
   }
   else {
-    let returnedUrl = urls.insertOne({original_url: newUrl, short_url: counter})
+    let returnedUrl = await urls.insertOne({original_url: newUrl, short_url: counter})
+    idGenerator();
+    console.log("counter should be " + counter)
     console.log(returnedUrl)
-    counter++;
-    console.log(counter)
-    return returnedUrl
+    return {"original_url" : returnedUrl.insertedId["original_url"]}
   }
 }
 
@@ -68,6 +68,7 @@ app.get('/api/shorturl/:shorturl', function(req,res) {
 
 const idGenerator = () => {
   counter++;
+  return counter;
 }
 
 app.listen(port, function() {
