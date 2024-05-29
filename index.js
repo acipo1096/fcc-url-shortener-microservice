@@ -45,13 +45,15 @@ app.get('/api/shorturl', function(req,res) {
 async function addUrl(newUrl) {
   const urls = model.collection;
   console.log("The posted URL is " + newUrl)
-  const urlExists = await urls.findOne({url: newUrl})
+  const urlExists = await urls.findOne({original_url: newUrl})
   if (urlExists) {
-    return {urlExists};
+    return {"original_url" : urlExists['original_url'], "short_url" : urlExists['short_url']};
   }
   else {
-    let returnedUrl = urls.insertOne({id: counter, url: newUrl})
+    let returnedUrl = urls.insertOne({original_url: newUrl, short_url: counter})
+    console.log(returnedUrl)
     counter++;
+    console.log(counter)
     return returnedUrl
   }
 }
