@@ -29,10 +29,11 @@ app.get('/api/hello', function(req, res) {
   res.json({ greeting: 'hello API' });
 });
 
-app.post('/api/shorturl', function(req,res) {
+app.post('/api/shorturl', async function(req,res) {
   const originalURL = req.body.url
-  addUrl(originalURL);
-  res.redirect('/api/shorturl');
+  const result = await addUrl(originalURL);
+  console.log("result" + result)
+  res.json(result)
 });
 
 app.get('/api/shorturl', function(req,res) {
@@ -46,14 +47,11 @@ async function addUrl(newUrl) {
   console.log("The posted URL is " + newUrl)
   const urlExists = await urls.findOne({url: newUrl})
   if (urlExists) {
-    console.log("exists!")
-    console.log(urlExists);
     return {urlExists};
   }
   else {
     let returnedUrl = urls.insertOne({id: counter, url: newUrl})
     counter++;
-    console.log({"original_url" : newUrl, "short_url" : '1'})
     return returnedUrl
   }
 }
