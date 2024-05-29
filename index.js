@@ -15,6 +15,7 @@ const port = process.env.PORT || 3000;
 
 app.use(cors());
 
+app.use(bodyParser.urlencoded({extended: false}))
 app.use(bodyParser.json())
 
 app.use('/public', express.static(`${process.cwd()}/public`));
@@ -29,30 +30,41 @@ app.get('/api/hello', function(req, res) {
 });
 
 app.post('/api/shorturl', function(req,res) {
-  console.log(req.body.url)
-  const originalURL = ""
-  res.json(addUrl(originalURL));
+  const originalURL = req.body.url
+  addUrl(originalURL);
+  res.redirect('/api/shorturl');
+});
+
+app.get('/api/shorturl', function(req,res) {
+
+  res.json(addUrl(req.params.url))
 })
+
+
+async function addUrl(newUrl) {
+  const urls = model.collection;
+  console.log("The posted URL is " + newUrl)
+  const urlExists = await urls.findOne({url: newUrl})
+  if (urlExists) {
+    console.log("exists!")
+    console.log(urlExists);
+    return {urlExists};
+  }
+  else {
+    let returnedUrl = urls.insertOne({id: counter, url: newUrl})
+    counter++;
+    console.log({"original_url" : newUrl, "short_url" : '1'})
+    return returnedUrl
+  }
+}
+
+addUrl();
 
 app.get('/api/shorturl/:shorturl', function(req,res) {
   const shortUrl = req.params.shorturl;
   const getUrl = model.collection.findOne({id: shortUrl});
   res.json({url: getUrl})
 })
-
-const addUrl = (newUrl) => {
-  const urls = model.collection;
-  console.log(newUrl)
-  const urlExists = urls.findOne({url: newUrl})
-  if (urlExists) return urlExists;
-  else {
-    urls.insertOne({id: counter, url: newUrl})
-    counter++;
-    return newUrl;
-  }
-}
-
-addUrl();
 
 const idGenerator = () => {
   counter++;
@@ -61,3 +73,5 @@ const idGenerator = () => {
 app.listen(port, function() {
   console.log(`Listening on port ${port}`);
 });
+
+// I still don't understand bodyParser
