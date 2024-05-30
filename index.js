@@ -76,6 +76,10 @@ const idGenerator = () => {
   return counter;
 }
 
+const getDocs = () => {
+  model.countDocuments
+}
+
 app.listen(port, function() {
   console.log(`Listening on port ${port}`);
 });
