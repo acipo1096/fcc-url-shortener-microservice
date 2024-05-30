@@ -40,7 +40,6 @@ app.get('/api/shorturl', function(req,res) {
   res.json(addUrl(req.params.url))
 })
 
-
 async function addUrl(newUrl) {
   const urls = model.collection;
   console.log("The posted URL is " + newUrl)
@@ -49,19 +48,8 @@ async function addUrl(newUrl) {
     return {"original_url" : urlExists['original_url'], "short_url" : urlExists['short_url']};
   }
   else {
-    if (counter = 0) counter++;
-    else {
-      await urls.findOne({short_url: counter})
-
-    }
-    let returnedUrl = await urls.insertOne({original_url: newUrl, short_url: counter})
-    counter = 0 ? counter++ : {
-    }
-    idGenerator();
-    console.log("counter should be " + counter)
-    console.log(returnedUrl)
-    console.log({"original_url" : returnedUrl.insertedId["original_url"]})
-    return {"original_url" : returnedUrl.insertedId["original_url"]}
+    let returnedUrl = await urls.insertOne({original_url: newUrl, short_url: await getDocs() + 1})
+    return {"original_url" : newUrl, "short_url" : await getDocs()}
   }
 }
 
@@ -71,14 +59,14 @@ app.get('/api/shorturl/:shorturl', function(req,res) {
   res.json({url: getUrl})
 })
 
-const idGenerator = () => {
-  counter++;
-  return counter;
+
+async function getDocs(){
+  const count = await model.countDocuments();
+  console.log(count)
+  return count;
 }
 
-const getDocs = () => {
-  model.countDocuments
-}
+getDocs();
 
 app.listen(port, function() {
   console.log(`Listening on port ${port}`);
