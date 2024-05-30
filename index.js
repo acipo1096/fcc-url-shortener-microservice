@@ -30,13 +30,13 @@ app.get('/api/hello', function(req, res) {
 });
 
 app.post('/api/shorturl', async function(req,res) {
+  const httpRegex = /k/;
   const originalURL = req.body.url
   const result = await addUrl(originalURL);
   res.json(result)
 });
 
 app.get('/api/shorturl', function(req,res) {
-
   res.json(addUrl(req.params.url))
 })
 
@@ -62,11 +62,8 @@ app.get('/api/shorturl/:shorturl', function(req,res) {
 
 async function getDocs(){
   const count = await model.countDocuments();
-  console.log(count)
   return count;
 }
-
-getDocs();
 
 app.listen(port, function() {
   console.log(`Listening on port ${port}`);
