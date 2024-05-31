@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
-// const autoIncrement = require('mongoose-auto-increment');
 
 const Urls = new Schema({
     original_url: String,
@@ -10,7 +9,6 @@ const Urls = new Schema({
 const connectDB = async () => {
     try {
         const conn = await mongoose.connect(process.env.MONGO_URI);
-        // autoIncrement.initialize(conn);
         console.log("MongoDB connected!")
 
     } catch (error) {
@@ -23,10 +21,3 @@ const connectDB = async () => {
 const model = mongoose.model("url_shortener", Urls, "url_shortener");
 
 module.exports = { connectDB , model}
-
-// Urls.plugin(autoIncrement.plugin, {
-//     model: 'Urls',
-//     field: 'short_url',
-//     startAt: 1,
-//     incrementBy : 1
-// })

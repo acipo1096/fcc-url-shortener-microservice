@@ -1,14 +1,11 @@
 require('dotenv').config();
 const express = require('express');
-const bodyParse = require('body-parser')
+const bodyParser = require('body-parser')
 const cors = require('cors');
 const app = express();
 const {connectDB, model} = require("./config/db");
-const bodyParser = require('body-parser');
 
 connectDB();
-
-let counter = 0;
 
 // Basic Configuration
 const port = process.env.PORT || 3000;
@@ -43,20 +40,18 @@ app.post('/api/shorturl', async function(req,res) {
 
 async function addUrl(newUrl) {
   const urls = model.collection;
-  console.log("The posted URL is " + newUrl)
   const urlExists = await urls.findOne({original_url: newUrl})
   if (urlExists) {
     return {"original_url" : urlExists['original_url'], "short_url" : urlExists['short_url']};
   }
   else {
-    let returnedUrl = await urls.insertOne({original_url: newUrl, short_url: await getDocs() + 1})
+    await urls.insertOne({original_url: newUrl, short_url: await getDocs() + 1})
     return {"original_url" : newUrl, "short_url" : await getDocs()}
   }
 }
 
 app.get('/api/shorturl/:shorturl', async function(req,res) {
   const shortUrl = parseInt(req.params.shorturl);
-  console.log(shortUrl)
   const getUrl = await model.collection.findOne({short_url:shortUrl });
   res.redirect(getUrl["original_url"]);
 })
