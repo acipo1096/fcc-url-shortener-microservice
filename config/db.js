@@ -11,7 +11,7 @@ const connectDB = async () => {
     try {
         const conn = await mongoose.connect(process.env.MONGO_URI);
         // autoIncrement.initialize(conn);
-        console.log("MongdDB connected!")
+        console.log("MongoDB connected!")
 
     } catch (error) {
         console.log("Error! MongoDB NOT connected.")

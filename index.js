@@ -41,10 +41,6 @@ app.post('/api/shorturl', async function(req,res) {
   }
 });
 
-app.get('/api/shorturl', function(req,res) {
-  res.json(addUrl(req.params.url))
-})
-
 async function addUrl(newUrl) {
   const urls = model.collection;
   console.log("The posted URL is " + newUrl)
@@ -58,10 +54,11 @@ async function addUrl(newUrl) {
   }
 }
 
-app.get('/api/shorturl/:shorturl', function(req,res) {
-  const shortUrl = req.params.shorturl;
-  const getUrl = model.collection.findOne({id: shortUrl});
-  res.json({url: getUrl})
+app.get('/api/shorturl/:shorturl', async function(req,res) {
+  const shortUrl = parseInt(req.params.shorturl);
+  console.log(shortUrl)
+  const getUrl = await model.collection.findOne({short_url:shortUrl });
+  res.redirect(getUrl["original_url"]);
 })
 
 
