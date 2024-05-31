@@ -30,10 +30,15 @@ app.get('/api/hello', function(req, res) {
 });
 
 app.post('/api/shorturl', async function(req,res) {
-  const httpRegex = /k/;
+  const httpRegex = /^http[s]?:\/\//;
   const originalURL = req.body.url
-  const result = await addUrl(originalURL);
-  res.json(result)
+  if (httpRegex.test(originalURL)) {
+    const result = await addUrl(originalURL);
+    res.json(result)
+  }
+  else {
+    res.json({error: "Invalid URL"})
+  }
 });
 
 app.get('/api/shorturl', function(req,res) {
