@@ -66,4 +66,5 @@ app.listen(port, function() {
   console.log(`Listening on port ${port}`);
 });
 
-// I still don't understand bodyParser
+// Notes: what exactly does bodyParser do?
+// From Simplilearn: It is an npm module used to process data sent in an HTTP request body
