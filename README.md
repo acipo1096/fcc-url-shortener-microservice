@@ -1,3 +1,3 @@
 # URL Shortener Microservice
 
-This is the boilerplate code for the URL Shortener Microservice project. Instructions for building your project can be found at https://www.freecodecamp.org/learn/back-end-development-and-apis/back-end-development-and-apis-projects/url-shortener-microservice.
+One of the 5 projects required to earn freeCodeCamp's Back End Development and APIs certification, which is to create an exercise tracker. Built with JavaScript, NodeJS and MongoDB.
